@@ -1,12 +1,21 @@
 echo off
 
+rem validate input
 if [%1] == [] goto usage
-rem set the variable RESULT to empty string
-set RESULT=
-for /f %%i in ('git status -s') do set RESULT=%%i
-if NOT [%RESULT%]==[] goto uncommitted
 
+rem checks for valid branch state and target branch
 
+rem set the variable ResultUncommittedChanges to empty string
+set ResultUncommittedChanges=
+for /f %%i in ('git status -s') do set ResultUncommittedChanges=%%i
+if NOT [%ResultUncommittedChanges%]==[] goto uncommitted
+
+rem set the variable ResultRemoteBranchExists to empty string
+set ResultRemoteBranchExists=
+for /f %%i in ('git branch -l *%~1/%2*') do set ResultRemoteBranchExists=%%i
+if [%ResultRemoteBranchExists%]==[] goto  notFound
+
+git fetch
 git checkout %~1/%2
 git fetch origin 
 git reset --hard origin/%~1/%2
@@ -41,6 +50,15 @@ echo on
 @echo -------------------------------------------------------------------------
 @echo error uncommitted changes!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 @echo *******exiting script before we lose anything important*******
+@echo -------------------------------------------------------------------------
+
+exit /b 1
+echo on
+
+:notFound
+@echo -------------------------------------------------------------------------
+@echo remote branch not found  %1/%2
+@echo *******exiting script*******
 @echo -------------------------------------------------------------------------
 
 exit /b 1
