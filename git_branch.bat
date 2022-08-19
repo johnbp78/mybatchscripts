@@ -7,11 +7,13 @@ rem checks for valid branch state and target branch
 
 rem set the variable ResultUncommittedChanges to empty string
 set ResultUncommittedChanges=
+set i=
 for /f %%i in ('git status -s') do set ResultUncommittedChanges=%%i
 if NOT [%ResultUncommittedChanges%]==[] goto uncommitted
 
 rem set the variable ResultRemoteBranchExists to empty string
 set ResultRemoteBranchExists=
+set i=
 for /f %%i in ('git branch -l *%~1/%2*') do set ResultRemoteBranchExists=%%i
 if [%ResultRemoteBranchExists%]==[] goto  notFound
 
