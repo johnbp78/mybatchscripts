@@ -1,4 +1,5 @@
 echo off
+rem - fetch latest
 git fetch
 rem validate input
 if [%1] == [] goto usage
@@ -30,9 +31,7 @@ rundll32 user32.dll,MessageBeep
 git checkout -b users/%USERNAME%/%1/%2/%3
 
 
-exit /B 0
-
-echo on
+goto exitSuccess
 
 
 :TwoParam
@@ -47,9 +46,7 @@ rundll32 user32.dll,MessageBeep
 git checkout -b users/%USERNAME%/%1/%2
 
 
-exit /B 0
-
-echo on
+goto exitSuccess
 
 
 
@@ -67,8 +64,7 @@ rem - help file
 @echo -----------------------------------------------------------------------------
 
 
-exit /B 1
-echo on
+goto exitError
 
 
 :uncommitted
@@ -78,8 +74,7 @@ rem - ERROR - uncommitted changes in current working tree
 @echo *******exiting script before we lose anything important*******
 @echo -------------------------------------------------------------------------
 
-exit /b 1
-echo on
+goto exitError
 
 :notFound
 rem - ERROR - remote branch not found
@@ -88,5 +83,13 @@ rem - ERROR - remote branch not found
 @echo *******exiting script*******
 @echo -------------------------------------------------------------------------
 
+goto exitError
+
+
+:exitError
 exit /b 1
+echo on
+
+:exitSuccess
+exit /B 0
 echo on
