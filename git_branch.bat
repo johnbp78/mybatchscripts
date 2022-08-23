@@ -1,8 +1,9 @@
 echo off
-rem - fetch latest
-git fetch
+
 rem validate input
 if [%1] == [] goto usage
+
+
 
 rem checks for valid branch state and target branch
 
@@ -11,6 +12,9 @@ set ResultUncommittedChanges=
 set i=
 for /f %%i in ('git status -s') do set ResultUncommittedChanges=%%i
 if NOT [%ResultUncommittedChanges%]==[] goto uncommitted
+
+rem - fetch latest
+git fetch
 
 rem set the variable ResultRemoteBranchExists to empty string
 set ResultRemoteBranchExists=
@@ -52,16 +56,19 @@ goto exitSuccess
 
 :usage
 rem - help file
-@echo -----------------------------------------------------------------------------
-@echo %0 creates a new feature branch
-@echo     - checks if working tree is clean
-@echo 	  - fetches latest code
-@echo -----------------------------------------------------------------------------
-@echo Usage: %0 param%%1 param%%2 param%%3
+@echo ---------------------------------------------------------------------------------
+@echo 				%0  
+@echo - creates a new feature branch
+@echo - checks if working tree is clean
+@echo - fetches latest code
+@echo ---------------------------------------------------------------------------------
+@echo Usage: %0 param%%1 param%%2 param%%3		"git_branch release 15.0 70313_08222022"
 @echo       param%%1 the relative path of the branch to operate on. example: release
 @echo       param%%2 the branch to operate on. example: 15.0
 @echo       param%%3 the name of the feature branch. example defect99999
-@echo -----------------------------------------------------------------------------
+@echo ---------------------------------------------------------------------------------
+
+
 
 
 goto exitError
@@ -69,19 +76,22 @@ goto exitError
 
 :uncommitted
 rem - ERROR - uncommitted changes in current working tree
-@echo -------------------------------------------------------------------------
+@echo -----------------------------------------------------------------------------
 @echo error uncommitted changes!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 @echo *******exiting script before we lose anything important*******
-@echo -------------------------------------------------------------------------
+@echo -----------------------------------------------------------------------------
+
 
 goto exitError
 
 :notFound
 rem - ERROR - remote branch not found
-@echo -------------------------------------------------------------------------
+
+@echo -----------------------------------------------------------------------------
 @echo remote branch not found  %1/%2
 @echo *******exiting script*******
-@echo -------------------------------------------------------------------------
+@echo -----------------------------------------------------------------------------
+
 
 goto exitError
 
