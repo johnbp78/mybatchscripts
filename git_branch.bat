@@ -4,6 +4,10 @@ rem validate input
 if [%1] == [] goto usage
 
 
+set DirIsRepo=
+set i=
+for /f %%i in ('git rev-parse --is-inside-work-tree') do set DirIsRepo=%%i
+if  not [%DirIsRepo%]==[true] goto dirIsNotRepo
 
 rem checks for valid branch state and target branch
 
@@ -30,11 +34,7 @@ git checkout %~1/%2
 git fetch origin 
 git reset --hard origin/%~1/%2
 rundll32 user32.dll,MessageBeep
-
-
 git checkout -b users/%USERNAME%/%1/%2/%3
-
-
 goto exitSuccess
 
 
@@ -45,11 +45,7 @@ git checkout %~1
 git fetch origin 
 git reset --hard origin/%~1
 rundll32 user32.dll,MessageBeep
-
-
 git checkout -b users/%USERNAME%/%1/%2
-
-
 goto exitSuccess
 
 
@@ -67,11 +63,7 @@ rem - help file
 @echo       param%%2 the branch to operate on. example: 15.0
 @echo       param%%3 the name of the feature branch. example defect99999
 @echo ---------------------------------------------------------------------------------
-
-
-
-
-goto exitError
+goto exitSuccess
 
 
 :uncommitted
@@ -91,8 +83,15 @@ rem - ERROR - remote branch not found
 @echo remote branch not found  %1/%2
 @echo *******exiting script*******
 @echo -----------------------------------------------------------------------------
+goto exitError
 
 
+:dirIsNotRepo
+rem - ERROR - current directory is not a git repository   %CD%
+@echo -----------------------------------------------------------------------------
+@echo %CD% is not a git repository
+@echo *******exiting script*******
+@echo -----------------------------------------------------------------------------
 goto exitError
 
 
