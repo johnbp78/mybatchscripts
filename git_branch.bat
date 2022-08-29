@@ -20,15 +20,16 @@ if NOT [%ResultUncommittedChanges%]==[] goto uncommitted
 rem - fetch latest
 git fetch
 
-rem set the variable ResultRemoteBranchExists to empty string
-set ResultRemoteBranchExists=
-set i=
-for /f %%i in ('git branch -r -l *%~1/%2*') do set ResultRemoteBranchExists=%%i
-if [%ResultRemoteBranchExists%]==[] goto  notFound
+
 
 rem - check if the users specified 2 or 3 params
 if [%3] == [] goto TwoParam
 
+rem set the variable ResultRemoteBranchExists to empty string
+set ResultRemoteBranchExists=
+set i=
+for /f %%i in ('git branch -r -l origin/%~1/%2') do set ResultRemoteBranchExists=%%i
+if [%ResultRemoteBranchExists%]==[] goto  notFound
 
 git checkout %~1/%2
 git fetch origin 
@@ -40,7 +41,12 @@ goto exitSuccess
 
 :TwoParam
 rem - for when use specifies remote as single parameter
-git fetch
+rem set the variable ResultRemoteBranchExists to empty string
+set ResultRemoteBranchExists=
+set i=
+for /f %%i in ('git branch -r -l origin/%~1') do set ResultRemoteBranchExists=%%i
+if [%ResultRemoteBranchExists%]==[] goto  notFound
+
 git checkout %~1
 git fetch origin 
 git reset --hard origin/%~1
@@ -80,7 +86,11 @@ goto exitError
 rem - ERROR - remote branch not found
 
 @echo -----------------------------------------------------------------------------
+IF [%3] == []  (
+@echo remote branch not found  %1
+) ELSE (
 @echo remote branch not found  %1/%2
+)
 @echo *******exiting script*******
 @echo -----------------------------------------------------------------------------
 goto exitError
