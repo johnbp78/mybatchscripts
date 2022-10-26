@@ -35,7 +35,7 @@ git checkout %~1/%2
 git fetch origin 
 git reset --hard origin/%~1/%2
 rundll32 user32.dll,MessageBeep
-git checkout -b users/%USERNAME%/%1/%2/%3
+git checkout -b users/%username%/%1/%2/%3
 goto exitSuccess
 
 
@@ -51,7 +51,7 @@ git checkout %~1
 git fetch origin 
 git reset --hard origin/%~1
 rundll32 user32.dll,MessageBeep
-git checkout -b users/%USERNAME%/%1/%2
+git checkout -b users/%username%/%1/%2
 goto exitSuccess
 
 
@@ -78,8 +78,6 @@ rem - ERROR - uncommitted changes in current working tree
 @echo error uncommitted changes!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 @echo *******exiting script before we lose anything important*******
 @echo -----------------------------------------------------------------------------
-
-
 goto exitError
 
 :notFound
