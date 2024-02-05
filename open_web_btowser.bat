@@ -1,0 +1,1 @@
+"c:\Program Files\Google\Chrome\Application\chrome.exe" --new-window http://google.com

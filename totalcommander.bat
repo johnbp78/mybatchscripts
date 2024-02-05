@@ -1,0 +1,1 @@
+runas /user:"adm-jpears8" "c:\Program Files\totalcmd\TOTALCMD64.EXE"
