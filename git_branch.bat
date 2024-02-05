@@ -20,32 +20,38 @@ if NOT [%ResultUncommittedChanges%]==[] goto uncommitted
 rem - fetch latest
 git fetch
 
+
+
+rem - check if the users specified 2 or 3 params. fist param is the script itself
+if [%3] == [] goto TwoParam
+
 rem set the variable ResultRemoteBranchExists to empty string
 set ResultRemoteBranchExists=
 set i=
-for /f %%i in ('git branch -r -l *%~1/%2*') do set ResultRemoteBranchExists=%%i
+for /f %%i in ('git branch -r -l origin/%~1/%2') do set ResultRemoteBranchExists=%%i
 if [%ResultRemoteBranchExists%]==[] goto  notFound
-
-rem - check if the users specified 2 or 3 params
-if [%3] == [] goto TwoParam
-
 
 git checkout %~1/%2
 git fetch origin 
 git reset --hard origin/%~1/%2
 rundll32 user32.dll,MessageBeep
-git checkout -b users/%USERNAME%/%1/%2/%3
+git checkout -b users/%git_username%/%1/%2/%3
 goto exitSuccess
 
 
 :TwoParam
 rem - for when use specifies remote as single parameter
-git fetch
+rem set the variable ResultRemoteBranchExists to empty string
+set ResultRemoteBranchExists=
+set i=
+for /f %%i in ('git branch -r -l origin/release/%~1') do set ResultRemoteBranchExists=%%i
+if [%ResultRemoteBranchExists%]==[] goto  notFound
+
 git checkout %~1
 git fetch origin 
-git reset --hard origin/%~1
+git reset --hard origin/release/%~1
 rundll32 user32.dll,MessageBeep
-git checkout -b users/%USERNAME%/%1/%2
+git checkout -b users/%git_username%/%1/%2
 goto exitSuccess
 
 
@@ -72,15 +78,17 @@ rem - ERROR - uncommitted changes in current working tree
 @echo error uncommitted changes!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 @echo *******exiting script before we lose anything important*******
 @echo -----------------------------------------------------------------------------
-
-
 goto exitError
 
 :notFound
 rem - ERROR - remote branch not found
 
 @echo -----------------------------------------------------------------------------
+IF [%3] == []  (
+@echo remote branch not found  %1
+) ELSE (
 @echo remote branch not found  %1/%2
+)
 @echo *******exiting script*******
 @echo -----------------------------------------------------------------------------
 goto exitError

@@ -1,0 +1,1 @@
+runas /user:rcis_dom\pearj01 "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\devenv.exe"
